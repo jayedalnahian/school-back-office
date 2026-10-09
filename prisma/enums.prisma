@@ -1,0 +1,40 @@
+enum assessment_level {
+  ELEMENTARY
+  INTERMEDIATE
+  ADVANCED
+}
+
+enum attendance_status {
+  PRESENT
+  ABSENT
+  LATE
+  EXCUSED
+}
+
+enum day_of_week {
+  SATURDAY
+  SUNDAY
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+}
+
+enum gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum indicator_type {
+  PI
+  BI
+}
+
+enum role {
+  SUPER_ADMIN
+  SCHOOL_ADMIN
+  TEACHER
+  GUARDIAN
+}

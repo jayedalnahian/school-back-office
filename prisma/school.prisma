@@ -1,0 +1,30 @@
+model School {
+  id                    String                  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  gps_code              String                  @unique @db.VarChar(20)
+  name                  String                  @db.VarChar(255)
+  division              String?                 @db.VarChar(100)
+  district              String?                 @db.VarChar(100)
+  upazila               String?                 @db.VarChar(100)
+  cluster               String?                 @db.VarChar(100)
+  address               String?
+  phone                 String?                 @db.VarChar(20)
+  is_active             Boolean?                @default(true)
+  is_deleted            Boolean?                @default(false)
+  deleted_at            DateTime?               @db.Timestamptz(6)
+  created_by            String?                 @db.Uuid
+  created_at            DateTime?               @default(now()) @db.Timestamptz(6)
+  updated_at            DateTime?               @default(now()) @updatedAt @db.Timestamptz(6)
+  academic_years        academic_years[]
+  class_routines        class_routines[]
+  classes               classes[]
+  evaluation_indicators evaluation_indicators[]
+  shifts                shifts[]
+  students              students[]
+  subjects              subjects[]
+  teacher_profiles      teacher_profiles[]
+  users                 users[]
+
+  @@index([gps_code], map: "idx_schools_gps_code")
+  @@index([is_deleted], map: "idx_schools_is_deleted")
+  @@map("schools")
+}

@@ -1,0 +1,28 @@
+model class_routines {
+  id               String           @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  school_id        String           @db.Uuid
+  academic_year_id String           @db.Uuid
+  section_id       String           @db.Uuid
+  subject_id       String           @db.Uuid
+  teacher_id       String           @db.Uuid
+  day_of_week      day_of_week
+  period_number    Int
+  start_time       String           @db.VarChar(10)
+  end_time         String           @db.VarChar(10)
+  is_deleted       Boolean?         @default(false)
+  deleted_at       DateTime?        @db.Timestamptz(6)
+  created_by       String?          @db.Uuid
+  created_at       DateTime?        @default(now()) @db.Timestamptz(6)
+  updated_at       DateTime?        @default(now()) @db.Timestamptz(6)
+  academic_years   academic_years   @relation(fields: [academic_year_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users            users?           @relation(fields: [created_by], references: [id], onUpdate: NoAction)
+  schools          School           @relation(fields: [school_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  sections         sections         @relation(fields: [section_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  subjects         subjects         @relation(fields: [subject_id], references: [id], onUpdate: NoAction)
+  teacher_profiles teacher_profiles @relation(fields: [teacher_id], references: [id], onUpdate: NoAction)
+
+  @@unique([academic_year_id, section_id, day_of_week, period_number], map: "uq_routine_slot")
+  @@index([is_deleted], map: "idx_routines_is_deleted")
+  @@index([section_id, day_of_week], map: "idx_routines_section_day")
+  @@index([teacher_id, day_of_week], map: "idx_routines_teacher_day")
+}

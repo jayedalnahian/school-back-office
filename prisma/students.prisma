@@ -1,0 +1,30 @@
+model students {
+  id                  String                @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  school_id           String                @db.Uuid
+  guardian_id         String                @db.Uuid
+  admission_no        String                @db.VarChar(50)
+  full_name           String                @db.VarChar(255)
+  birth_date          DateTime              @db.Date
+  birth_reg_no        String?               @db.VarChar(30)
+  gender              gender
+  blood_group         String?               @db.VarChar(10)
+  address             String?
+  avatar_url          String?
+  is_active           Boolean?              @default(true)
+  is_deleted          Boolean?              @default(false)
+  deleted_at          DateTime?             @db.Timestamptz(6)
+  created_by          String?               @db.Uuid
+  created_at          DateTime?             @default(now()) @db.Timestamptz(6)
+  updated_at          DateTime?             @default(now()) @db.Timestamptz(6)
+  attendances         attendances[]
+  enrollments         enrollments[]
+  student_evaluations student_evaluations[]
+  users               users?                @relation(fields: [created_by], references: [id], onUpdate: NoAction)
+  guardian_profiles   guardian_profiles     @relation(fields: [guardian_id], references: [id], onUpdate: NoAction)
+  schools             School                @relation(fields: [school_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([school_id, admission_no], map: "uq_school_student_admission")
+  @@index([admission_no], map: "idx_students_admission_no")
+  @@index([is_deleted], map: "idx_students_is_deleted")
+  @@index([school_id, guardian_id], map: "idx_students_school_guardian")
+}

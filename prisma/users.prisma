@@ -1,0 +1,37 @@
+model users {
+  id                                                    String                  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  school_id                                             String?                 @db.Uuid
+  phone                                                 String                  @unique @db.VarChar(20)
+  email                                                 String?                 @unique @db.VarChar(255)
+  password_hash                                         String?                 @db.VarChar(255)
+  full_name                                             String                  @db.VarChar(255)
+  role                                                  role
+  is_active                                             Boolean?                @default(true)
+  is_deleted                                            Boolean?                @default(false)
+  deleted_at                                            DateTime?               @db.Timestamptz(6)
+  created_by                                            String?                 @db.Uuid
+  created_at                                            DateTime?               @default(now()) @db.Timestamptz(6)
+  updated_at                                            DateTime?               @default(now()) @db.Timestamptz(6)
+  academic_years                                        academic_years[]
+  attendances                                           attendances[]
+  class_routines                                        class_routines[]
+  classes                                               classes[]
+  enrollments                                           enrollments[]
+  evaluation_indicators                                 evaluation_indicators[]
+  guardian_profiles_guardian_profiles_created_byTousers guardian_profiles[]     @relation("guardian_profiles_created_byTousers")
+  guardian_profiles_guardian_profiles_user_idTousers    guardian_profiles?      @relation("guardian_profiles_user_idTousers")
+  sections                                              sections[]
+  shifts                                                shifts[]
+  student_evaluations                                   student_evaluations[]
+  students                                              students[]
+  subjects                                              subjects[]
+  teacher_profiles_teacher_profiles_created_byTousers   teacher_profiles[]      @relation("teacher_profiles_created_byTousers")
+  teacher_profiles_teacher_profiles_user_idTousers      teacher_profiles?       @relation("teacher_profiles_user_idTousers")
+  users                                                 users?                  @relation("usersTousers", fields: [created_by], references: [id], onUpdate: NoAction)
+  other_users                                           users[]                 @relation("usersTousers")
+  schools                                               School?                 @relation(fields: [school_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([is_deleted], map: "idx_users_is_deleted")
+  @@index([phone], map: "idx_users_phone")
+  @@index([school_id, role], map: "idx_users_school_role")
+}
