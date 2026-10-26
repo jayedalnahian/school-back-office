@@ -11,6 +11,9 @@ router.post(
   SchoolControllers.onboardSchool
 );
 
+// https://skilled-profusely-foil.ngrok-free.dev/api/v1/schools/onboard
+
+
 router.post(
   "/",
   validateRequest(SchoolValidators.createSchoolSchema),

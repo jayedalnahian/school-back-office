@@ -8,6 +8,7 @@
   },
   "scripts": {
     "dev": "tsx watch src/server.ts",
+    "tunnel": "tsx src/tunnel.ts",
     "build": "tsc",
     "start": "node dist/server.js",
     "prisma:pull": "prisma db pull",
@@ -20,6 +21,7 @@
   "license": "ISC",
   "packageManager": "pnpm@10.32.1",
   "dependencies": {
+    "@ngrok/ngrok": "^1.7.0",
     "@prisma/adapter-pg": "^7.10.0",
     "@prisma/client": "^7.10.0",
     "cookie-parser": "^1.4.7",
