@@ -13,9 +13,32 @@ const app: Application = express();
 app.set("query parser", (str: string) => qs.parse(str));
 
 // CORS configuration
+const allowedOrigins = [
+  envVars.FRONTEND_URL,
+  "http://localhost:3000",
+  "http://127.0.0.1:3000",
+  "http://localhost:3001",
+  "http://127.0.0.1:3001",
+];
+
 app.use(
   cors({
-    origin: [envVars.FRONTEND_URL, "http://localhost:3000"],
+    origin: (origin, callback) => {
+      // Allow requests with no origin (mobile apps, Postman, server-to-server, curl)
+      if (!origin) return callback(null, true);
+
+      // Allow listed origins, local network origins, or any ngrok domain
+      const isAllowed =
+        allowedOrigins.includes(origin) ||
+        /^http:\/\/(localhost|127\.0\.0\.1|192\.168\.\d+\.\d+|10\.\d+\.\d+\.\d+)(:\d+)?$/.test(origin) ||
+        /\.ngrok(-free)?\.(dev|app|io)$/.test(new URL(origin).hostname);
+
+      if (isAllowed) {
+        return callback(null, true);
+      }
+
+      return callback(null, false);
+    },
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: [
@@ -24,6 +47,9 @@ app.use(
       "X-Requested-With",
       "Accept",
       "Origin",
+      "ngrok-skip-browser-warning",
+      "Cache-Control",
+      "Pragma",
     ],
   })
 );

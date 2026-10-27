@@ -142,12 +142,27 @@ export const createSchoolZodSchema = z.object({
   }),
 });
 
+/**
+ * Zod schema for retrieving a school by ID (UUID param validation)
+ */
+export const getSchoolByIdZodSchema = z.object({
+  params: z.object({
+    id: z
+      .string({
+        message: "School ID is required",
+      })
+      .uuid("Invalid school ID format. Must be a valid UUID"),
+  }),
+});
+
 export const SchoolValidators = {
   onboardSchoolZodSchema,
   updateSchoolZodSchema,
   createSchoolZodSchema,
+  getSchoolByIdZodSchema,
   // Backwards compatibility aliases
   onboardSchoolSchema: onboardSchoolZodSchema,
   updateSchoolSchema: updateSchoolZodSchema,
   createSchoolSchema: createSchoolZodSchema,
+  getSchoolByIdSchema: getSchoolByIdZodSchema,
 };

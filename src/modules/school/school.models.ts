@@ -150,13 +150,18 @@ export const getAllSchoolsFromDB = async (
     },
   ];
 
-  if (searchTerm) {
+  const rawSearch = searchTerm || (whereConditions as Record<string, unknown>).search;
+  if (typeof rawSearch === "string" && rawSearch.trim().length > 0) {
+    const query = rawSearch.trim();
     andConditions.push({
       OR: [
-        { name: { contains: searchTerm, mode: "insensitive" } },
-        { gps_code: { contains: searchTerm, mode: "insensitive" } },
-        { upazila: { contains: searchTerm, mode: "insensitive" } },
-        { district: { contains: searchTerm, mode: "insensitive" } },
+        { name: { contains: query, mode: "insensitive" } },
+        { gps_code: { contains: query, mode: "insensitive" } },
+        { upazila: { contains: query, mode: "insensitive" } },
+        { district: { contains: query, mode: "insensitive" } },
+        { division: { contains: query, mode: "insensitive" } },
+        { address: { contains: query, mode: "insensitive" } },
+        { phone: { contains: query, mode: "insensitive" } },
       ],
     });
   }
@@ -178,8 +183,28 @@ export const getAllSchoolsFromDB = async (
     andConditions.push({ cluster });
   }
 
-  if (is_active !== undefined) {
-    andConditions.push({ is_active });
+  // Handle is_active safely from boolean or string ("true"/"false", "active"/"inactive")
+  const rawStatus =
+    is_active !== undefined
+      ? is_active
+      : (whereConditions as Record<string, unknown>).status;
+
+  if (rawStatus !== undefined && rawStatus !== null && rawStatus !== "") {
+    let boolActive: boolean | undefined;
+    if (typeof rawStatus === "boolean") {
+      boolActive = rawStatus;
+    } else if (typeof rawStatus === "string") {
+      const lower = rawStatus.toLowerCase().trim();
+      if (lower === "true" || lower === "active") {
+        boolActive = true;
+      } else if (lower === "false" || lower === "inactive") {
+        boolActive = false;
+      }
+    }
+
+    if (boolActive !== undefined) {
+      andConditions.push({ is_active: boolActive });
+    }
   }
 
   const where: Prisma.SchoolWhereInput = {

@@ -22,7 +22,11 @@ router.post(
 
 router.get("/", SchoolControllers.getAllSchools);
 
-router.get("/:id", SchoolControllers.getSchoolById);
+router.get(
+  "/:id",
+  validateRequest(SchoolValidators.getSchoolByIdSchema),
+  SchoolControllers.getSchoolById
+);
 
 router.patch(
   "/:id",

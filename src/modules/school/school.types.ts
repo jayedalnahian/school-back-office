@@ -119,3 +119,22 @@ export type IOnboardSchoolPayload = ISchoolOnboardPayload;
 export type IOnboardSchoolResult = ISchoolOnboardResult;
 export type ISchoolFilters = ISchoolFilterOptions;
 export type ISchoolPaginationOptions = IPaginationOptions;
+
+/**
+ * Shape of data returned for school update form placeholders
+ */
+export interface ISchoolUpdateFormData {
+  id: string;
+  name: string;
+  gps_code: string;
+  division: string | null;
+  district: string | null;
+  upazila: string | null;
+  cluster: string | null;
+  address: string | null;
+  phone: string | null;
+  is_active: boolean;
+  created_at: Date | null;
+  updated_at: Date | null;
+}
+
